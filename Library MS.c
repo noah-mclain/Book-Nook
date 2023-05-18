@@ -51,137 +51,176 @@ node * search_for_book (char *name, char*department);
 
 int main()
 {
-    // if (load() == 1)
-    // {
-    //     return 0;
-    // }
-    // addbook();
-    current_time();
-    time_t due = due_date();
-    overdue_book(due);
+    int choice;
+    do {
+        printf("\nLibrary Management System\n");
+        printf("1. Add book\n");
+        printf("2. Delete book\n");
+        printf("3. Add borrower\n");
+        printf("4. Borrowed book\n");
+        printf("5. Return book\n");
+        printf("6. passed due date\n");
+        printf("7. Search for a book\n");
+        printf("8. List borrowed books\n");
+        printf("0. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+        case 1:
+            addbook();
+            break;
+        case 2:
+            deletebooks();
+            break;
+        case 3:
+            addborrower();
+            break;
+        case 4:
+            borrowedbook();
+            break;
+        case 5:
+            returnbook();
+            break;
+        case 6:
+            Passedduedate();
+            break;
+        case 7:
+            searchforbook();
+            break;
+        case 8:
+            listborrowedbooks();
+            break;
+        case 0:
+            printf("Exiting program...\n");
+            break;
+        default:
+            printf("Invalid choice.\n");
+        }
+    } while (choice != 0);
+    return 0;
 }
 
-// int load()
-// {
-//     FILE * f;
-//     f = fopen("filename", "br");
-//     if (f == NULL)
-//     {
-//         printf("Unable to open file\n");
-//         return 1;
-//     }
+int load()
+{
+    FILE * f;
+    f = fopen("filename", "br");
+    if (f == NULL)
+    {
+        printf("Unable to open file\n");
+        return 1;
+    }
 
-//     while(true)
-//     {
-//         node * p = malloc(sizeof(node));
-//         if (p == NULL)
-//         {
-//             return 1;
-//         }
-//        if (fread(p, sizeof(node),1, f) != 1)
-//        {
-//         free (p);
-//         break;
-//        }
-//        free (p);
-//     bookcount++;
-//     }
-//     fclose(f);
-//     return 0;
-// }
+    while(true)
+    {
+        node * p = malloc(sizeof(node));
+        if (p == NULL)
+        {
+            return 1;
+        }
+       if (fread(p, sizeof(node),1, f) != 1)
+       {
+        free (p);
+        break;
+       }
+       free (p);
+    bookcount++;
+    }
+    fclose(f);
+    return 0;
+}
 
-// unsigned int hash (char* department)
-// {
-//     unsigned int hash = 0;
-//     for (int i = 0; department[i] != '\0' ; i++)
-//     {
-//         hash = hash * 31 + department[i];
-//     }
-//     return (hash % 9);
-// }
+unsigned int hash (char* department)
+{
+    unsigned int hash = 0;
+    for (int i = 0; department[i] != '\0' ; i++)
+    {
+        hash = hash * 31 + department[i];
+    }
+    return (hash % 9);
+}
 
-// void add_borrower()
-// {
-//     borrowed new_borrower;
-//     printf( "Enter the borrower's details\n");
-//     printf("First Name: ");
-//     gets(new_borrower.fname);
-//     printf("Last Name: ");
-//     gets(new_borrower.lname);
-//     printf("Cellphone Number: ");
-//     scanf("%d", &new_borrower.cellnumber);
-//     printf("Home Number: ");
-//     scanf("%d", &new_borrower.homenumber);
-//     printf("Address: ");
-//     scanf("%s", &new_borrower.address);
-//     printf("Email: ");
-//     scanf("%s", &new_borrower.email);
-//     printf("Date Borrowed: ");
-//     current_time();
-//     printf("\nBorrower Added");
-// }
+void add_borrower()
+{
+    borrowed new_borrower;
+    printf( "Enter the borrower's details\n");
+    printf("First Name: ");
+    gets(new_borrower.fname);
+    printf("Last Name: ");
+    gets(new_borrower.lname);
+    printf("Cellphone Number: ");
+    scanf("%d", &new_borrower.cellnumber);
+    printf("Home Number: ");
+    scanf("%d", &new_borrower.homenumber);
+    printf("Address: ");
+    scanf("%s", &new_borrower.address);
+    printf("Email: ");
+    scanf("%s", &new_borrower.email);
+    printf("Date Borrowed: ");
+    current_time();
+    printf("\nBorrower Added");
+}
 
-// void addbook() 
-// {
-//     books newb;
-//     printf("Enter book details:\n");
-//     printf("Name: ");
-//     gets(newb.name);
-//     printf("\nAuthor: ");
-//     gets(newb.author);
-//     printf("\nCategory: ");
-//     gets(newb.category);
-//     printf("\ndepartment: ");
-//     gets(newb.department);
-//     printf("\nPublished date: ");
-//     gets(newb.language);
-//     printf("\nLanguage: ");
-//     gets(newb.publisheddate);
-//     printf("\nQuantity: ");
-//     scanf("%d", &newb.quantity);
-//     printf("Book Added");
-// }
+void addbook() 
+{
+    books newb;
+    printf("Enter book details:\n");
+    printf("Name: ");
+    gets(newb.name);
+    printf("\nAuthor: ");
+    gets(newb.author);
+    printf("\nCategory: ");
+    gets(newb.category);
+    printf("\ndepartment: ");
+    gets(newb.department);
+    printf("\nPublished date: ");
+    gets(newb.language);
+    printf("\nLanguage: ");
+    gets(newb.publisheddate);
+    printf("\nQuantity: ");
+    scanf("%d", &newb.quantity);
+    printf("Book Added");
+}
 
-// void borrow_book(char *name, char*department) 
-// {
-//     char  borrower_name[50];
-//     printf("Enter book name to borrow: ");
-//     scanf("%s", name);
-//     printf("Enter department: ");
-//     scanf("%s", department);
-//     printf("Enter borrower name: ");
-//     scanf("%s", borrower_name);
-//     node* p = search_for_book( name,  department );
-//     if ((p-> book.quantity) > 0)
-//     {
-//         p->book.quantity--;
-//         printf("%s borrowed successfully.\n", name);
-//         printf("Due date: ");
-//         printf(due_date());
-//         return;
-//     }
-//     else 
-//     {
-//         printf("Sorry, the book is not available right now.\n");
-//         return;
-//     }
-// }
+void borrow_book(char *name, char*department) 
+{
+    char  borrower_name[50];
+    printf("Enter book name to borrow: ");
+    scanf("%s", name);
+    printf("Enter department: ");
+    scanf("%s", department);
+    printf("Enter borrower name: ");
+    scanf("%s", borrower_name);
+    node* p = search_for_book( name,  department );
+    if ((p-> book.quantity) > 0)
+    {
+        p->book.quantity--;
+        printf("%s borrowed successfully.\n", name);
+        printf("Due date: ");
+        printf(due_date());
+        return;
+    }
+    else 
+    {
+        printf("Sorry, the book is not available right now.\n");
+        return;
+    }
+}
 
-// node * search_for_book (char *name, char*department)
-// {
-//     int bucket =hash(department);
-//     node *d = ddc[bucket];
-//     while (d != NULL)
-//     {
-//         if(strcmp(name,d -> book.name) == 0)
-//         {
-//             return d;
-//         }
-//         d = d -> next;
-//     }
-//     return NULL;
+node * search_for_book (char *name, char*department)
+{
+    int bucket =hash(department);
+    node *d = ddc[bucket];
+    while (d != NULL)
+    {
+        if(strcmp(name,d -> book.name) == 0)
+        {
+            return d;
+        }
+        d = d -> next;
+    }
+    return NULL;
 
-// }
+}
 
 char current_time()
 {
