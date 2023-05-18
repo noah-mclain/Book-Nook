@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <conio.h>
 
 const int length = 999;
 int bookcount = 0;
@@ -14,29 +15,38 @@ typedef struct books
     char * language[20];
     char * publisheddate[1000];
     int quantity;
-}
-books;
+} books;
 
 typedef struct node
 {
     books book ;
     struct node * next;
     struct node * previous;
-}
-node;
+} node;
+
+typedef struct borrowed 
+{
+    char * fname[100];
+    char * lname[100];
+    int * cellnumber;
+    int * homenumber;
+    char * address[100];
+    char * email[100];
+    char * dateborrowed[100];
+} borrowed;
 
 int load();
-
+void addbook();
+void add_borrower();
 
 int main()
 {
-    if (load() == 1)
-    {
-        return 0;
-    }
+    // if (load() == 1)
+    // {
+    //     return 0;
+    // }
+    addbook();
 }
-
-
 
 int load()
 {
@@ -67,22 +77,60 @@ int load()
     return 0;
 }
 
-void addbook(books)
+void add_borrower()
 {
-    if (load() == 1)
+    borrowed new_borrower;
+    do
     {
-        return 0;
-    }
-    else
-    {
-        do
-        {
-            printf( "Enter the book details\n" );
-            fgets(new-);
-            
-            printf ("Add another book? y,n \n");
-            fflush(stdin);
-            scanf("%c",&exit);
-        }  while ( exit=='y');
-    }
+        printf( "Enter the borrower's details\n");
+        printf("First Name: ");
+        gets(new_borrower.fname);
+        printf("Last Name: ");
+        gets(new_borrower.lname);
+        printf("Cellphone Number: %d", &new_borrower.cellnumber);
+        printf("Home Number: %d", &new_borrower.homenumber);
+        printf("Address: ");
+        gets(new_borrower.address);
+        printf("Email: ");
+        gets(new_borrower.email);
+        printf("Publish Date: ");
+        gets(new_borrower.dateborrowed);
+
+        printf ("Add another borrower? y,n \n");
+        fflush(stdin);
+        scanf("%c",&exit);
+    }  while ( exit=='y');
 }
+
+// void addbook() 
+// {
+//     books newb;
+//     printf("Enter book details:\n");
+//     printf("Name: ");
+//     gets(newb.name);
+//     printf("\nAuthor: ");
+//     gets(newb.author);
+//     printf("\nCategory: ");
+//     gets(newb.category);
+//     printf("\ndepartment: ");
+//     gets(newb.department);
+//     printf("\nPublished date: ");
+//     gets(newb.language);
+//     printf("\nLanguage: ");
+//     gets(newb.publisheddate);
+//     printf("\nQuantity: ");
+//     scanf("%d", &newb.quantity);
+//     printf("Added");
+// }
+
+// void append_file(char *filename, void *action, size_t data_size)
+// {
+//     FILE *file = fopen(filename, "ab");
+//     if(!file)
+//     {
+//         printf("File could not be opened for appending\n");
+//         return 0;
+//     }
+//     fwrite(data, data_size, 1, file);
+//     fclose(file);
+// }
