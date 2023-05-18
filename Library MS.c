@@ -42,9 +42,10 @@ typedef struct borrowed
 
 int load();
 char current_time();
+time_t due_date();
 void addbook();
 void add_borrower();
-char due_date();
+void overdue_book(time_t due_date);
 unsigned int hash(char*department);
 node * search_for_book (char *name, char*department);
 
@@ -56,7 +57,8 @@ int main()
     // }
     // addbook();
     current_time();
-    due_date();
+    time_t due = due_date();
+    overdue_book(due);
 }
 
 // int load()
@@ -150,18 +152,19 @@ int main()
 //     printf("Enter borrower name: ");
 //     scanf("%s", borrower_name);
 //     node* p = search_for_book( name,  department );
-//             if ((p-> book.quantity) > 0)
-//             {
-//                 p->book.quantity--;
-//                 printf("%s borrowed successfully.\n", name);
-//                 printf("Due date: %d/%d/%d\n", rand() % 30 + 1, rand() % 12 + 1, 2022);
-//                 return;
-//             }
-//             else 
-//             {
-//                 printf("Sorry, the book is not available right now.\n");
-//                 return;
-//             }
+//     if ((p-> book.quantity) > 0)
+//     {
+//         p->book.quantity--;
+//         printf("%s borrowed successfully.\n", name);
+//         printf("Due date: ");
+//         printf(due_date());
+//         return;
+//     }
+//     else 
+//     {
+//         printf("Sorry, the book is not available right now.\n");
+//         return;
+//     }
 // }
 
 // node * search_for_book (char *name, char*department)
@@ -191,13 +194,32 @@ char current_time()
     return 0;
 }
 
-char due_date()
+time_t due_date()
 {
     time_t t = time(NULL);
     struct tm *now = localtime(&t);
-    now->tm_mday += 14; // Add 14 days to the current day
-    mktime(now); // Normalize the struct tm
-    printf("%02d/%02d/%02d %02d:%02d:%02d\n", now->tm_mday, now->tm_mon + 1, now->tm_year % 100, now->tm_hour, now->tm_min, now->tm_sec);
+    // Calculate due date (two weeks from now)
+    struct tm due_date = *now;
+    due_date.tm_mday += 14; // Add 14 days to the current day
+    mktime(&due_date); // Normalize the struct tm
+    // Store the due date as a constant value for future use
+    const time_t DUE_DATE = mktime(&due_date);
+    printf("%02d/%02d/%02d %02d:%02d:%02d\n", due_date.tm_mon +1, due_date.tm_mday + 1, due_date.tm_year % 100, now->tm_hour, now->tm_min, now->tm_sec);
+    return DUE_DATE;
+}
+
+void overdue_book(time_t due_date)
+{
+    time_t current_time = time(NULL);
+    double days_overdue = difftime(current_time, due_date) / (24 * 60 * 60);
+    if (days_overdue > 0) 
+    {
+        printf("The book is %.0f days overdue\n", days_overdue);
+    } 
+    else 
+    {
+        printf("There are %.0f days left until the due date\n", -days_overdue);
+    }
 }
 
 // void append_file(char *filename, void *action, size_t data_size)
