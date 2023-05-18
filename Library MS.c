@@ -3,16 +3,16 @@
 #include <stdbool.h>
 
 const int length = 999;
-int bookcount=0;
+int bookcount = 0;
 
 typedef struct books
 {
-    char * name[ length +1];
+    char * name[1000];
     char * author[30] ;
     char * category[20];
     char * department[20];
     char * language[20];
-    char * publisheddate[ length +1];
+    char * publisheddate[1000];
     int quantity;
 }
 books;
@@ -20,8 +20,8 @@ books;
 typedef struct node
 {
     books book ;
-    struct node next;
-    struct nodeprevious;
+    struct node * next;
+    struct node * previous;
 }
 node;
 
@@ -30,7 +30,7 @@ int load();
 
 int main()
 {
-    if (load()==1)
+    if (load() == 1)
     {
         return 0;
     }
@@ -40,9 +40,9 @@ int main()
 
 int load()
 {
-    FILEf;
-    f= fopen("filename", "br");
-    if (f==NULL)
+    FILE * f;
+    f = fopen("filename", "br");
+    if (f == NULL)
     {
         printf("Unable to open file\n");
         return 1;
@@ -50,12 +50,12 @@ int load()
 
     while(true)
     {
-        nodep =malloc(sizeof(node));
-        if (p==NULL)
+        node * p = malloc(sizeof(node));
+        if (p == NULL)
         {
             return 1;
         }
-       if (fread(p, sizeof(node),1, f)!=1)
+       if (fread(p, sizeof(node),1, f) != 1)
        {
         free (p);
         break;
@@ -66,4 +66,24 @@ int load()
     }
     fclose(f);
     return 0;
+}
+
+void addbook(books)
+{
+    if (load() == 1)
+    {
+        return 0;
+    }
+    else
+    {
+        do
+        {
+            printf( "Enter the book details\n" );
+            
+            
+            printf ("Add another entity? y,n \n");
+            fflush(stdin);
+            scanf("%c",&exit);
+        }  while ( exit=='y');
+    }
 }
