@@ -18,27 +18,30 @@ typedef struct books
     char language[20];
     char publisheddate[1000];
     int quantity;
-}books;
-
+} books;
 typedef struct node
 {
-    books book ;
+    books book;
     struct node * next;
     struct node * previous;
 } node;
-
-node * ddc[9];
-
-typedef struct borrowed 
-{
-    char * fname[100];
-    char * lname[100];
-    int cellnumber;
-    int homenumber;
-    char * address[100];
-    char * email[100];
-    char * dateborrowed[100];
+typedef struct borrowed {
+    char fname[100];
+    char lname[100];
+    char number[100];
+    char address[100];
+    char email[100];
+    char dateborrowed[100];
 } borrowed;
+typedef struct borrowedbooks
+{
+    books * book;
+    borrowed * borrower;
+    struct borrowedbooks * next;
+} borrowedbooks;
+
+node *ddc[9];
+borrowedbooks * first = NULL;
 
 int load();
 char current_time();
@@ -112,27 +115,66 @@ int load()
 
     while(true)
     {
-        node * p = malloc(sizeof(node));
+        books * p = malloc(sizeof(books));
         if (p == NULL)
         {
             return 1;
         }
-       if (fread(p, sizeof(node),1, f) != 1)
+       if (fread(p,(sizeof(books)),1, f) != 1)
        {
         free (p);
         break;
        }
-       free (p);
-    bookcount++;
+       books *new_book = malloc(sizeof(books));
+       if(new_book == NULL)
+       {
+        printf("unable to allocate memory");
+        free(p);
+        return 1;
+       }
+       strcpy(new_book -> name, p -> name);
+       strcpy(new_book -> author, p -> author);
+       strcpy(new_book -> department, p -> department);
+       strcpy(new_book -> category, p -> category);
+       strcpy(new_book -> language, p -> language);
+       strcpy(new_book -> publisheddate, p -> publisheddate);
+       new_book -> quantity = p -> quantity;
+        node *b = malloc(sizeof(node));
+        if (b == NULL)
+        {
+            printf("Unable to access memory\n");
+            return 1;
+        }
+        b -> book = *new_book;
+        b -> next = NULL;
+        b -> previous = NULL;
+        bookcount++;
+
+        int bucket = hash(new_book -> department);
+        if(ddc[bucket] == NULL)
+        {
+            ddc[bucket] = b;
+        }
+        else
+        {
+            node *temp = ddc[bucket];
+            while (temp -> next != NULL)
+            {
+                temp = temp -> next;
+            }
+            temp -> next = b;
+            b -> previous = temp;
+
+        }
     }
     fclose(f);
     return 0;
 }
 
-unsigned int hash (char* department)
+ unsigned int hash (char * department)
 {
     unsigned int hash = 0;
-    for (int i = 0; department[i] != '\0' ; i++)
+    for (int i = 0; department[i] != '\0'; i++)
     {
         hash = hash * 31 + department[i];
     }
@@ -261,15 +303,19 @@ void overdue_book(time_t due_date)
     }
 }
 
-// void append_file(char *filename, void *action, size_t data_size)
-// {
-//     FILE *file = fopen(filename, "ab");
-//     if(!file)
-//     {
-//         printf("File could not be opened for appending\n");
-//         return 0;
-//     }
-//     fwrite(data, data_size, 1, file);
-//     fclose(file);
-// }
+void saveFile(char* filename,char* data)
+{
+    FILE* fp;
 
+    fp = fopen(filename, "wb"); 
+
+    if (fp == NULL)
+    {
+        printf("404. cannot open file\n");
+        exit(1);
+    }
+
+    fwrite(data,sizeof(books),num_books,fp);
+
+    fclose(fp); 
+}
