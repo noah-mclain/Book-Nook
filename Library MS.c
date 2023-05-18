@@ -24,6 +24,8 @@ typedef struct node
     struct node * previous;
 } node;
 
+node * ddc[9];
+
 typedef struct borrowed 
 {
     char * fname[100];
@@ -38,6 +40,7 @@ typedef struct borrowed
 int load();
 void addbook();
 void add_borrower();
+unsigned int hash(char*department);
 node * search_for_book (char *name, char*department);
 
 int main()
@@ -77,6 +80,16 @@ int load()
     }
     fclose(f);
     return 0;
+}
+
+unsigned int hash (char* department)
+{
+    unsigned int hash=0;
+    for (int i=0;department[i]!='\0';i++)
+    {
+        hash = hash*31+department[i];
+    }
+    return (hash%9);
 }
 
 void add_borrower()
@@ -121,9 +134,33 @@ void addbook()
     printf("Book Added");
 }
 
+void borrow_book(char* name, char* department) 
+{
+    char book_name[50], borrower_name[50];
+    printf("Enter book name to borrow: ");
+    scanf("%s", book_name);
+    printf("Enter department: ");
+    scanf("%s", book_name);
+    printf("Enter borrower name: ");
+    scanf("%s", borrower_name);
+    node * p = search_for_book(name, department); 
+    if ((p->book.quantity) > 0)
+    {
+        p->book.quantity--;
+        printf("%s borrowed successfully.\n", book_name);
+        printf("Due date: %d/%d/%d\n", rand() % 30 + 1, rand() % 12 + 1, 2022);
+        return;
+    }
+    else 
+    {
+        printf("Sorry, the book is not available right now.\n");
+        return;
+    }
+}
+
 node * search_for_book (char *name, char*department)
 {
-    int bucket = hash(department);
+    int bucket =hash(department);
     node *d = ddc[bucket];
     while (d != NULL)
     {
@@ -131,7 +168,7 @@ node * search_for_book (char *name, char*department)
         {
             return d;
         }
-        d = d->next;
+        d = d -> next;
     }
     return NULL;
 
