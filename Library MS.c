@@ -67,22 +67,12 @@ int load()
     return 0;
 }
 
-void addbook(books)
+unsigned int hash (char* department)
 {
-    if (load() == 1)
+    unsigned int hash=0;
+    for (int i=0;department[i]!='\0';i++)
     {
-        return 0;
+        hash = hash*31+department[i];
     }
-    else
-    {
-        do
-        {
-            printf( "Enter the book details\n" );
-            fgets(new-);
-            
-            printf ("Add another book? y,n \n");
-            fflush(stdin);
-            scanf("%c",&exit);
-        }  while ( exit=='y');
-    }
+    return (hash%9);
 }
