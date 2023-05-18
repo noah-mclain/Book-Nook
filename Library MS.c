@@ -24,9 +24,10 @@ typedef struct node
     struct node * previous;
 }
 node;
+node ddc[9];
 
 int load();
-
+unsigned int hash(char*department);
 
 int main()
 {
