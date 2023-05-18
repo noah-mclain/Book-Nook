@@ -28,8 +28,8 @@ typedef struct borrowed
 {
     char * fname[100];
     char * lname[100];
-    int * cellnumber;
-    int * homenumber;
+    int cellnumber;
+    int homenumber;
     char * address[100];
     char * email[100];
     char * dateborrowed[100];
@@ -45,7 +45,8 @@ int main()
     // {
     //     return 0;
     // }
-    addbook();
+    // addbook();
+    add_borrower();
 }
 
 int load()
@@ -80,48 +81,44 @@ int load()
 void add_borrower()
 {
     borrowed new_borrower;
-    do
-    {
-        printf( "Enter the borrower's details\n");
-        printf("First Name: ");
-        gets(new_borrower.fname);
-        printf("Last Name: ");
-        gets(new_borrower.lname);
-        printf("Cellphone Number: %d", &new_borrower.cellnumber);
-        printf("Home Number: %d", &new_borrower.homenumber);
-        printf("Address: ");
-        gets(new_borrower.address);
-        printf("Email: ");
-        gets(new_borrower.email);
-        printf("Publish Date: ");
-        gets(new_borrower.dateborrowed);
-
-        printf ("Add another borrower? y,n \n");
-        fflush(stdin);
-        scanf("%c",&exit);
-    }  while ( exit=='y');
+    printf( "Enter the borrower's details\n");
+    printf("First Name: ");
+    gets(new_borrower.fname);
+    printf("Last Name: ");
+    gets(new_borrower.lname);
+    printf("Cellphone Number: ");
+    scanf("%d", &new_borrower.cellnumber);
+    printf("Home Number: ");
+    scanf("%d", &new_borrower.homenumber);
+    printf("Address: ");
+    scanf("%s", &new_borrower.address);
+    printf("Email: ");
+    scanf("%s", &new_borrower.email);
+    printf("Date Borrowed: ");
+    scanf("%s", &new_borrower.dateborrowed);
+    printf("Borrower Added");
 }
 
-// void addbook() 
-// {
-//     books newb;
-//     printf("Enter book details:\n");
-//     printf("Name: ");
-//     gets(newb.name);
-//     printf("\nAuthor: ");
-//     gets(newb.author);
-//     printf("\nCategory: ");
-//     gets(newb.category);
-//     printf("\ndepartment: ");
-//     gets(newb.department);
-//     printf("\nPublished date: ");
-//     gets(newb.language);
-//     printf("\nLanguage: ");
-//     gets(newb.publisheddate);
-//     printf("\nQuantity: ");
-//     scanf("%d", &newb.quantity);
-//     printf("Added");
-// }
+void addbook() 
+{
+    books newb;
+    printf("Enter book details:\n");
+    printf("Name: ");
+    gets(newb.name);
+    printf("\nAuthor: ");
+    gets(newb.author);
+    printf("\nCategory: ");
+    gets(newb.category);
+    printf("\ndepartment: ");
+    gets(newb.department);
+    printf("\nPublished date: ");
+    gets(newb.language);
+    printf("\nLanguage: ");
+    gets(newb.publisheddate);
+    printf("\nQuantity: ");
+    scanf("%d", &newb.quantity);
+    printf("Book Added");
+}
 
 // void append_file(char *filename, void *action, size_t data_size)
 // {
