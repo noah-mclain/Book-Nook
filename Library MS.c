@@ -8,14 +8,14 @@ int bookcount = 0;
 
 typedef struct books
 {
-    char * name[1000];
-    char * author[30] ;
-    char * category[20];
-    char * department[20];
-    char * language[20];
-    char * publisheddate[1000];
+    char name[1000];
+    char author[30] ;
+    char category[20];
+    char department[20];
+    char language[20];
+    char publisheddate[1000];
     int quantity;
-} books;
+}books;
 
 typedef struct node
 {
@@ -38,6 +38,7 @@ typedef struct borrowed
 int load();
 void addbook();
 void add_borrower();
+node * search_for_book (char *name, char*department);
 
 int main()
 {
@@ -118,6 +119,22 @@ void addbook()
     printf("\nQuantity: ");
     scanf("%d", &newb.quantity);
     printf("Book Added");
+}
+
+node * search_for_book (char *name, char*department)
+{
+    int bucket = hash(department);
+    node *d = ddc[bucket];
+    while (d != NULL)
+    {
+        if(strcmp(name,d -> book.name) == 0)
+        {
+            return d;
+        }
+        d = d->next;
+    }
+    return NULL;
+
 }
 
 // void append_file(char *filename, void *action, size_t data_size)
