@@ -60,7 +60,6 @@ int load()
         free (p);
         break;
        }
-
        free (p);
     bookcount++;
     }
@@ -79,9 +78,9 @@ void addbook(books)
         do
         {
             printf( "Enter the book details\n" );
+            fgets(new-);
             
-            
-            printf ("Add another entity? y,n \n");
+            printf ("Add another book? y,n \n");
             fflush(stdin);
             scanf("%c",&exit);
         }  while ( exit=='y');
