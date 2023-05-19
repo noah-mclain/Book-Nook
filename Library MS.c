@@ -41,6 +41,7 @@ typedef struct borrowedbooks //initializing the borrowed books structure
     borrowed * borrower; //having a pointer point to the borrower of the book
     struct borrowedbooks * next; //having a pointer point to the next borrowed book in the list
 } borrowedbooks; //setting 'borrowedbooks' as the structure's variable to be used throughout the code
+
 typedef struct Node  //list for borrwed books
 {
   borrowedbooks * bookborrowed ;
@@ -55,7 +56,7 @@ borrowedbooks *first = NULL; //having a pointer point to the first borrowed book
 int load();
 char current_time();
 time_t due_date();
-void add_book();
+void add_book(node ** new_head);
 void delete_book(char *name, char *department );
 node *borrow_book();
 borrowed *add_borrower();
@@ -129,87 +130,88 @@ int main()
 
 int load()
 {
-    FILE * f;
-    f = fopen("books.bin", "rb");
+    FILE * f; //initializing file pointer 'f'
+    f = fopen("books.bin", "rb"); //opening binary file 'books.bin' to read
     if (f == NULL)
     {
-        printf("No memory found. Creating new file to store the memory...\n");
-        f = fopen("books.bin","wb");
-        if(f == NULL)
+        printf("No memory found. Creating new file to store the memory...\n"); //if the file is not found then create new binary file
+        f = fopen("books.bin","wb"); //named 'books.bin' to write
+        if(f == NULL) //check again if file exists in memory
         {
-            printf("Unable to create file\n");
+            printf("Unable to create file\n"); //if not, then the file was unable to be created
             return 1;
         }
-        fclose(f);
-        f = fopen("books.bin","rb");
-        if (f == NULL)
+        fclose(f); //close the file
+        f = fopen("books.bin","rb"); //if the file was created, then have pointer 'f' point to file
+        if (f == NULL) //if pointer is pointing at NULL
         {
-            printf("Unable to open file\n");
+            printf("Unable to open file\n"); //then return 1 and print that file cannot be opened
             return 1;
         }
 
     }
 
-    while(true)
+    while(true) //while file is open
     {
-        books *p = malloc(sizeof(books));
-        if(p == NULL)
+        books *p = malloc(sizeof(books)); //have pointer 'p' point at book structure and allocate memory based on size of structure
+        if(p == NULL) //if pointer 'p' value is NULL, then return 1
         {
-            return 1;
+            return 1; //memory was unable to be allocated
         }
-       if(fread(p,(sizeof(books)),1, f) != 1)
+       if(fread(p,(sizeof(books)),1, f) != 1) //if memory was allocated to structure 'books' and read to file
        {
-            free (p);
-            break;
+            free (p); //then free data from memory
+            break; //exit if
        }
-       books *new_book = malloc(sizeof(books));
+       books *new_book = malloc(sizeof(books)); //have pointer'new_books" point at structure 'books' and allocate memory the size of 'books'
 
-       if(new_book == NULL)
+       if(new_book == NULL) //if pointer is NULL
        {
-            printf("unable to allocate memory");
-            free(p);
+            printf("unable to allocate memory"); //print that memory was not allocated
+            free(p); //free pointer 'p' from memory
             return 1;
        }
 
-       strcpy(new_book->name, p->name);
-       strcpy(new_book->author, p->author);
-       strcpy(new_book->department, p->department);
-       strcpy(new_book->category, p->category);
-       strcpy(new_book->language,p->language);
-       strcpy(new_book->publisheddate,p->publisheddate);
+       //memory was allocated
+       strcpy(new_book->name, p->name); //copy the name of the book from 'p' to the name of the book from 'new_book'
+       strcpy(new_book->author, p->author); //copy the name of the author from 'p' to the name of the author from 'new_book'
+       strcpy(new_book->department, p->department); //copy the name of the department from 'p' to the name of the department from 'new_book'
+       strcpy(new_book->category, p->category); //copy the name of the category from 'p' to the name of the category from 'new_book'
+       strcpy(new_book->language,p->language); //copy the language from 'p' to the language from 'new_book'
+       strcpy(new_book->publisheddate,p->publisheddate); //copy the publish date from 'p' to the publish date from 'new_book'
 
-       new_book -> quantity = p -> quantity;
+       new_book -> quantity = p -> quantity; //have pointer 'new_book' point to quantity which is equal to quantity from structure 'books'
        
-       node *b = malloc(sizeof(node));
+       node *b = malloc(sizeof(node)); //have pointer 'b' point to memory allocation of 'node'
        
        if(b == NULL)
        {
-            printf("Unable to access memory\n");
+            printf("Unable to access memory\n"); //if 'b' is NULL, the memory was unable to be accessed
             return 1;
        }
-       b -> book = *new_book;
-       b -> next = NULL;
-       b -> previous = NULL;
-       bookcount++;
+       b -> book = *new_book; //have current book in pointer 'b' assigned the value of 'new_book' to it
+       b -> next = NULL; //have the next new book in pointer 'b' be NULL
+       b -> previous = NULL; //have the previous new book in pointer 'b' be NULL
+       bookcount++; //increment the book counter by 1
 
-       int bucket = hash(new_book -> department);
+       int bucket = hash(new_book -> department); //initialize variable 'bucket' and give it the value of function 'hash' with the department in 'new_book' as the parameter
 
-       if(ddc[bucket] == NULL)
+       if(ddc[bucket] == NULL) //checks if the book is the first in the list
        {
-            ddc[bucket]=b;
+            ddc[bucket]=b; //if yes, then it immediately assigns the book to the list
        }
        else
        {
-            node *temp = ddc[bucket];
-            while (temp->next!=NULL)
+            node *temp = ddc[bucket]; //initializes a pointer to temporarily hold the book
+            while (temp->next!=NULL) //while the next book in the list does does not equal NULL
             {
-            temp=temp->next;
+                temp = temp -> next; //make temp equal to the next book in the list
             }
-            temp->next=b;
-            b->previous=temp;
+            temp -> next = b; //make the next book in the list equal to the value of 'b'
+            b -> previous = temp; //have the previous book in pointer 'b' equal to the value of 'temp' 
        }
     }
-    fclose(f);
+    fclose(f); //close file 'f'
     return 0;
 }
 
@@ -243,24 +245,52 @@ borrowed *add_borrower()
     return p;
 }
 
-void add_book() 
+void add_book(node ** new_head)
+//, books  new_data
 {
-    books newb;
+    //allocating memoery for new book
+    node* new_book = (node*) malloc(sizeof(node));
+
+     //new_book->book =new_data;
+
+    // Set the next and previous pointers for the new node to NULL
+    new_book->next = NULL;
+    new_book->previous = NULL;
+
+    // If the list is empty, set the new node as the head
+    if (*new_head == NULL) 
+    {
+        *new_head = new_book;
+        return;
+    }
+
+    // Traverse the list to find the last node
+    Node* last = *new_head;
+    while (last->next != NULL) 
+    {
+        last = last->next;
+    }
+
+    // Insert the new node after the last node
+    last->next = new_book;
+    new_book->previous = last;
+
+     //books newb;
     printf("Enter book details:\n");
-    printf("Name: ");
-    gets(newb.name);
-    printf("Author: ");
-    gets(newb.author);
-    printf("Category: ");
-    gets(newb.category);
-    printf("department: ");
-    gets(newb.department);
-    printf("Published date: ");
-    gets(newb.publisheddate);
-    printf("Language: ");
-    gets(newb.language);
-    printf("Quantity: ");
-    scanf("%d", &newb.quantity);
+    // printf("Name: ");
+    // gets(newb.name);
+    printf("\nAuthor: ");
+    gets(*new_book ->book.author);
+    printf("\nCategory: ");
+    gets(*new_book ->book.category);
+    printf("\ndepartment: ");
+    gets(*new_book ->book.department);
+    printf("\nPublished date: ");
+    gets(*new_book ->book.language);
+    printf("\nLanguage: ");
+    gets(*new_book ->book.publisheddate);
+    printf("\nQuantity: ");
+    scanf("%d", new_book ->book.quantity);
     printf("Book Added");
 }
 
