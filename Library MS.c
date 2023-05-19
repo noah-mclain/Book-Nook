@@ -1,59 +1,73 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <conio.h>
 #include <time.h>
 #include <assert.h>
 #include <stdbool.h>
 
 const int length = 999;
-int bookcount = 0;
+int bookcount = 0; //initializing the number of books as an integer and starting from 0
 
-typedef struct books
+typedef struct books //initializing the structure books
 {
-    char name[1000];
+    char name[1000]; 
     char author[30] ;
     char category[20];
     char department[20];
     char language[20];
     char publisheddate[1000];
     int quantity;
-} books;
-typedef struct node
+} books; //setting 'books' as the structure's variable name to be used throughout the code
+typedef struct node //initializing the structure for the pointer for books
 {
     books book;
-    struct node * next;
-    struct node * previous;
-} node;
-typedef struct borrowed {
+    struct node * next; //having a pointer point to the next book in the list
+    struct node * previous; //having a pointer point to the previous book in the list
+} node; //setting 'nodes' as the structure's variable name to be used throughout the code
+typedef struct borrowed //initializing the borrowers structure
+{
     char fname[100];
     char lname[100];
     char number[100];
     char address[100];
     char email[100];
     char dateborrowed[100];
-} borrowed;
-typedef struct borrowedbooks
+} borrowed; //setting 'borrowed' as the structure's varible to be used throughout the code
+typedef struct borrowedbooks //initializing the borrowed books structure
 {
-    books * book;
-    borrowed * borrower;
-    struct borrowedbooks * next;
-} borrowedbooks;
+    books * book; //having a pointer point to the book borrowed
+    borrowed * borrower; //having a pointer point to the borrower of the book
+    struct borrowedbooks * next; //having a pointer point to the next borrowed book in the list
+} borrowedbooks; //setting 'borrowedbooks' as the structure's variable to be used throughout the code
+typedef struct Node  //list for borrwed books
+{
+  borrowedbooks * bookborrowed ;
+  struct Node *next;
+  struct Node *prev;
+}Node;
 
-node *ddc[9];
-borrowedbooks * first = NULL;
+node *ddc[9]; //having a pointer point to an array of the 9 departments in the filing system
+borrowedbooks *first = NULL; //having a pointer point to the first borrowed book of the library and initializing it as NULL
 
+//calling prototypes
 int load();
 char current_time();
 time_t due_date();
-void addbook();
-void add_borrower();
+void add_book();
+void delete_book(char *name, char *department );
+node *borrow_book();
+borrowed *add_borrower();
 void overdue_book(time_t due_date);
+void return_book(char *name, char *department);
 unsigned int hash(char*department);
-node * search_for_book (char *name, char*department);
+node *search_for_book (char *name, char*department);
+void list_borrowed_books (borrowedbooks *firstB);
 
 int main()
 {
+    char name[length], dep[length];
     int choice;
     do {
         printf("\nLibrary Management System\n");
@@ -68,36 +82,46 @@ int main()
         printf("0. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
-        switch (choice) {
-        case 1:
-            addbook();
-            break;
-        case 2:
-            deletebooks();
-            break;
-        case 3:
-            addborrower();
-            break;
-        case 4:
-            borrowedbook();
-            break;
-        case 5:
-            returnbook();
-            break;
-        case 6:
-            Passedduedate();
-            break;
-        case 7:
-            searchforbook();
-            break;
-        case 8:
-            listborrowedbooks();
-            break;
-        case 0:
-            printf("Exiting program...\n");
-            break;
-        default:
-            printf("Invalid choice.\n");
+        switch (choice) 
+        {
+            case 1:
+                add_book();
+                break;
+            case 2:
+                printf("Enter the name of the book and the department\n");
+                gets(name);
+                gets(dep);
+                delete_book(name, dep);
+                break;
+            case 3:
+                add_borrower();
+                break;
+            case 4:
+                borrow_book();
+                break;
+            case 5:
+                printf("Enter the name of the book and the department\n");
+                gets(name);
+                gets(dep);
+                return_book(name, dep);
+                break;
+            case 6:
+                overdue_book(due_date());
+                break;
+            case 7:
+                printf("Enter the name of the book and the department\n");
+                gets(name);
+                gets(dep);
+                search_for_book(name, dep);
+                break;
+            case 8:
+                list_borrowed_books(first);
+                break;
+            case 0:
+                printf("Exiting program...\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
         }
     } while (choice != 0);
     return 0;
@@ -106,72 +130,90 @@ int main()
 int load()
 {
     FILE * f;
-    f = fopen("filename", "br");
+    f = fopen("books.bin", "rb");
     if (f == NULL)
     {
-        printf("Unable to open file\n");
-        return 1;
+        printf("No memory found. Creating new file to store the memory...\n");
+        f = fopen("books.bin","wb");
+        if(f == NULL)
+        {
+            printf("Unable to create file\n");
+            return 1;
+        }
+        fclose(f);
+        f = fopen("books.bin","rb");
+        if (f == NULL)
+        {
+            printf("Unable to open file\n");
+            return 1;
+        }
+
     }
 
     while(true)
     {
-        books * p = malloc(sizeof(books));
-        if (p == NULL)
+        books *p = malloc(sizeof(books));
+        if(p == NULL)
         {
             return 1;
         }
-       if (fread(p,(sizeof(books)),1, f) != 1)
+       if(fread(p,(sizeof(books)),1, f) != 1)
        {
-        free (p);
-        break;
+            free (p);
+            break;
        }
        books *new_book = malloc(sizeof(books));
+
        if(new_book == NULL)
        {
-        printf("unable to allocate memory");
-        free(p);
-        return 1;
+            printf("unable to allocate memory");
+            free(p);
+            return 1;
        }
-       strcpy(new_book -> name, p -> name);
-       strcpy(new_book -> author, p -> author);
-       strcpy(new_book -> department, p -> department);
-       strcpy(new_book -> category, p -> category);
-       strcpy(new_book -> language, p -> language);
-       strcpy(new_book -> publisheddate, p -> publisheddate);
+
+       strcpy(new_book->name, p->name);
+       strcpy(new_book->author, p->author);
+       strcpy(new_book->department, p->department);
+       strcpy(new_book->category, p->category);
+       strcpy(new_book->language,p->language);
+       strcpy(new_book->publisheddate,p->publisheddate);
+
        new_book -> quantity = p -> quantity;
-        node *b = malloc(sizeof(node));
-        if (b == NULL)
-        {
+       
+       node *b = malloc(sizeof(node));
+       
+       if(b == NULL)
+       {
             printf("Unable to access memory\n");
             return 1;
-        }
-        b -> book = *new_book;
-        b -> next = NULL;
-        b -> previous = NULL;
-        bookcount++;
+       }
+       b -> book = *new_book;
+       b -> next = NULL;
+       b -> previous = NULL;
+       bookcount++;
 
-        int bucket = hash(new_book -> department);
-        if(ddc[bucket] == NULL)
-        {
-            ddc[bucket] = b;
-        }
-        else
-        {
+       int bucket = hash(new_book -> department);
+
+       if(ddc[bucket] == NULL)
+       {
+            ddc[bucket]=b;
+       }
+       else
+       {
             node *temp = ddc[bucket];
-            while (temp -> next != NULL)
+            while (temp->next!=NULL)
             {
-                temp = temp -> next;
+            temp=temp->next;
             }
-            temp -> next = b;
-            b -> previous = temp;
-
-        }
+            temp->next=b;
+            b->previous=temp;
+       }
     }
     fclose(f);
     return 0;
 }
 
- unsigned int hash (char * department)
+unsigned int hash (char * department)
 {
     unsigned int hash = 0;
     for (int i = 0; department[i] != '\0'; i++)
@@ -181,74 +223,110 @@ int load()
     return (hash % 9);
 }
 
-void add_borrower()
+borrowed *add_borrower()
 {
-    borrowed new_borrower;
+    borrowed *p = malloc(sizeof(borrowed));
     printf( "Enter the borrower's details\n");
     printf("First Name: ");
-    gets(new_borrower.fname);
+    gets(p -> fname);
     printf("Last Name: ");
-    gets(new_borrower.lname);
+    gets(p -> lname);
     printf("Cellphone Number: ");
-    scanf("%d", &new_borrower.cellnumber);
-    printf("Home Number: ");
-    scanf("%d", &new_borrower.homenumber);
+    scanf("%d", p -> number);
     printf("Address: ");
-    scanf("%s", &new_borrower.address);
+    gets(p -> address);
     printf("Email: ");
-    scanf("%s", &new_borrower.email);
+    gets(p -> email);
     printf("Date Borrowed: ");
     current_time();
     printf("\nBorrower Added");
+    return p;
 }
 
-void addbook() 
+void add_book() 
 {
     books newb;
     printf("Enter book details:\n");
     printf("Name: ");
     gets(newb.name);
-    printf("\nAuthor: ");
+    printf("Author: ");
     gets(newb.author);
-    printf("\nCategory: ");
+    printf("Category: ");
     gets(newb.category);
-    printf("\ndepartment: ");
+    printf("department: ");
     gets(newb.department);
-    printf("\nPublished date: ");
-    gets(newb.language);
-    printf("\nLanguage: ");
+    printf("Published date: ");
     gets(newb.publisheddate);
-    printf("\nQuantity: ");
+    printf("Language: ");
+    gets(newb.language);
+    printf("Quantity: ");
     scanf("%d", &newb.quantity);
     printf("Book Added");
 }
 
-void borrow_book(char *name, char*department) 
+void delete_book(char *name, char *department )
 {
-    char  borrower_name[50];
+    node *p= search_for_book (name, department);
+    node *temp= p -> next;
+    temp -> previous = p -> previous;
+    free(p);
+}
+
+node *borrow_book()
+{
+    char name[1000];
+    char department[20];
     printf("Enter book name to borrow: ");
-    scanf("%s", name);
+    gets(name);
     printf("Enter department: ");
-    scanf("%s", department);
-    printf("Enter borrower name: ");
-    scanf("%s", borrower_name);
+    gets(department);
     node* p = search_for_book( name,  department );
-    if ((p-> book.quantity) > 0)
+    if ((p -> book.quantity) > 0)
     {
-        p->book.quantity--;
-        printf("%s borrowed successfully.\n", name);
+        p -> book.quantity--;
+        printf("%s Book is available!.\n", name);
+        borrowedbooks * request = malloc(sizeof(borrowedbooks));
+        request -> book = &p->book;
+        request -> borrower = add_borrower();
+        if(first == NULL)
+        {
+            first = request;
+        }
+        else
+        {
+            borrowedbooks *temp = first;
+            first = request;
+            first -> next = temp;
+        }
         printf("Due date: ");
         printf(due_date());
-        return;
+        return p;
     }
-    else 
+    else
     {
         printf("Sorry, the book is not available right now.\n");
-        return;
+        return NULL;
     }
 }
 
-node * search_for_book (char *name, char*department)
+void return_book(char *name, char *department)
+{
+
+    node *borrowed_book= borrow_book(name, department);
+
+    if(borrowed_book== NULL)
+    {
+        printf("Error: book not found");
+        return;
+    }
+
+    Node *returned_book= borrowed_book;
+    Node *temp= returned_book  -> next;
+    temp -> prev = returned_book -> prev;
+    free(returned_book);
+}
+
+node *search_for_book (char *name, char*department)
 {
     int bucket =hash(department);
     node *d = ddc[bucket];
@@ -303,11 +381,29 @@ void overdue_book(time_t due_date)
     }
 }
 
-void saveFile(char* filename,char* data)
+void list_borrowed_books (borrowedbooks *firstB)
+{
+    if (firstB != NULL)
+    {
+        if(first -> next != NULL)
+        {
+            list_borrowed_books(firstB -> next);
+            printf("Name of book: %s ", firstB -> book -> name);
+            printf("Name of borrower: %s", firstB -> borrower -> fname);
+        }
+        else
+        printf("Name of book: %s", firstB -> book -> name);
+        printf("Name of borrower: %s", firstB -> borrower -> fname);
+    }
+    else
+    printf("No borrowed books\n");
+}
+
+void save_file(char* filename,books* data, int num_books)
 {
     FILE* fp;
 
-    fp = fopen(filename, "wb"); 
+    fp = fopen("book_nook.bin", "wb"); 
 
     if (fp == NULL)
     {
