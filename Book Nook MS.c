@@ -46,12 +46,6 @@ typedef struct node //initializing the structure for the pointer for books
     struct node *previous; //having a pointer point to the previous book in the list
 } node; //setting 'nodes' as the structure's variable name to be used throughout the code
 
-// typedef struct Node  //list for borrwed books
-// {
-//   borrowedbooks *bookborrowed;
-//   struct Node *next;
-//   struct Node *prev;
-// }Node;
 
 node *ddc[9]; //having a pointer point to an array of the 9 departments in the filing system
 borrowedbooks *first = NULL; //having a pointer point to the first borrowed book of the library and initializing it as NULL
@@ -117,22 +111,6 @@ int main()
                 name[strlen(name)-1]=0;
                 return_book(name);
                 break;
-            // case 4:
-            //     printf("Enter the name of the book and the department\n");
-            //     fgets(name, sizeof(name), stdin);
-            //     name[strlen(name)-1]=0;
-            //     fgets(dep,sizeof(dep), stdin);
-            //     dep[strlen(dep)-1]=0;
-            //     node* borrowedbook = search_for_book(name, dep);
-            //     if (borrowedbook == NULL) 
-            //     {
-            //         printf("\033[1;31mBook not found\033[0m\n");
-            //     } 
-            //     else 
-            //     {
-            //         return_book(borrowedbook);
-            //     }
-            //     break;
             case 5:
                 overdue_book(due_date());
                 break;
@@ -472,39 +450,7 @@ void delete_book(char *name, char *department)
     {
         printf("There are no books remaining in the '%s' department\n", department);
     }
-    // node *p= search_for_book (name, department);
-    // int bucket=hash(department);
-    // if(p == NULL)
-    // {
-    //     printf("The book does not exist in the library\n");
-    // }
-    // else if(ddc[bucket]==p && p->next!=NULL && p->previous!=NULL)
-    // {
-    //     node *temp= p -> next;
-    //     node *temp2=p->previous;
-    //     temp -> previous = temp2;
-    //     temp2->next=temp;
-    //     ddc[bucket]=temp;
-    //     free(p);
-    //     printf("Book deleted\n");
-
-    // }
-    // else if(p->next!=NULL && p->previous!=NULL)
-    // {
-    //     printf("Else if\n");
-    //     node *temp= p -> next;
-    //     node *temp2=p->previous;
-    //     temp -> previous = temp2;
-    //     temp2->next=temp;
-    //     free(p);
-    //     printf("Book has been deleted\n");
-    // }
-    // else
-    // {
-    //     printf("else\n");
-    //     free(p);
-    //     printf("Book has been deleted\n");
-    // }
+    
 }
 
 borrowedbooks *borrow_book()
@@ -556,128 +502,11 @@ borrowedbooks *borrow_book()
         return NULL;
     }
 }
-// borrowedbooks *borrow_book()
-// {
-//     char name[999];
-//     char department[999];
-//     printf("Enter book name to borrow: ");
-//     //fgets(name, sizeof(name)-1, stdin);
-//     fgets(name, sizeof(name)-1, stdin);
-//     printf("Enter department: ");
-//     fgets(department, sizeof(department)-1, stdin);
-//     //node* p = search_for_book(name, department );
-//     node *p = search_for_book(name, department);
-//     if (p == NULL)
-//     {
-//         printf("Sorry, the book is not available right now.\n");
-//         return NULL;
-//     }
-//     else if ((p -> book.quantity) != 0)
-//     {
-//         printf("omg");
-//         p -> book.quantity--;
-//         printf("%s book is available!.\n", name);
-//         borrowedbooks * request = malloc(sizeof(borrowedbooks));
-//         request -> book = &p->book;
-//         request -> borrower = add_borrower();
-//         if(first == NULL)
-//         {
-//             first = request;
-//         }
-//         else
-//         {
-//             borrowedbooks *temp = first;
-//             first = request;
-//             first -> next = temp;
-//         }
-//         printf("Due date: ");
-//         printf("%ld" ,due_date());
-//         return request;
-//     }
-//     else
-//     {
-//         printf("Sorry, the book is not available right now.\n");
-//         return NULL;
-//     }
-// }
+
 
 borrowed *add_borrower()
 {
-    // //allocating memoery for new book
-    // node* borrower = malloc(sizeof(node));
-    // if (borrower == NULL)
-    // {
-    //     printf("Error: Failed to allocate memory\n");
-    //     return;
-    // }
-
-    // printf("Enter book details:\n");
-    // printf("Name: ");
-    // fgets(borrower->borrowed.fname sizeof(borrowed->borrowers.lname), stdin);
-    // borrowed->borrowes.name[strlen(borrowed->borrowers.name)-1]=0;
-    // printf("Author: ");
-    // fgets(new_book ->book.author,sizeof(new_book->book.author),stdin);
-    // new_book->book.author[strlen(new_book->book.author)-1]=0;
-    // printf("Category: ");
-    // fgets(new_book->book.category, sizeof(new_book->book.category), stdin);
-    // new_book->book.category[strlen(new_book->book.category)-1]=0;
-    // printf("department: ");
-    // fgets(new_book->book.department, sizeof(new_book->book.department), stdin);
-    // new_book->book.department[strlen(new_book->book.department)-1]=0;
-    // printf("Language: ");
-    // fgets(new_book->book.language, sizeof(new_book->book.language), stdin);
-    // new_book->book.language[strlen(new_book->book.language)-1]=0;
-    // printf("Published Date: ");
-    // fgets(new_book->book.publisheddate, sizeof(new_book->book.publisheddate), stdin);
-    // new_book->book.publisheddate[strlen(new_book->book.publisheddate)-1]=0;
-
-    // new_book->book.quantity = 0;
-
-    // int bucket = hash(new_book->book.department);
-    // node *p = malloc(sizeof(node));
-    // if(p == NULL)
-    // {
-    //     printf("Error, unable to allocate memory\n");
-    //     return;
-    // }
-
-    // p = search_for_book(new_book->book.name, new_book->book.department);
-    // if (p != NULL)
-    // {
-    //     p->book.quantity += 1;
-    //     new_book->book.quantity=p->book.quantity;
-    //     printf("Book quantity increased.\n");
-    // }
-    // else
-    // {
-    //     printf("wut");
-    //     free(p);
-    //     if (ddc[bucket] == NULL)
-    //     {
-    //         printf("buckets are empty\n");
-    //         ddc[bucket] = new_book;
-    //         new_book->next = NULL;
-    //         new_book->previous = NULL;
-    //         new_book->book.quantity=1;
-    //     }
-    //     else
-    //     {
-    //         printf("WTF\n");
-    //         if(ddc[bucket]->previous==NULL)
-    //         {
-    //             ddc[bucket]->previous=new_book;
-    //             ddc[bucket]->next=new_book;
-    //             new_book->book.quantity=1;
-    //         }
-    //         else
-    //         {
-    //             node *temp=ddc[bucket]->previous;
-    //             ddc[bucket]->previous= new_book;
-    //             new_book->previous=temp;
-    //             temp->next=new_book;
-    //             new_book->book.quantity=1;
-    //         }
-    //     }
+    
     borrowed* p = malloc(sizeof(borrowed));
     if (p == NULL) 
     {
@@ -729,149 +558,6 @@ void return_book (char * name)
     printf("\033[1;31mBook not currently borrowed.\033[0m\n");
     return;
 }
-
-
-
-
-
-// void return_book(borrowedbooks *borrowed_book)
-// {
-//     if (borrowed_book == NULL)
-//     {
-//         printf("Book not found.\n");
-//         return;
-//     }
-
-//     borrowedbooks *current = borrowed_book->bookborrowed;
-//     borrowedbooks *prev = NULL;
-
-//     while (current != NULL) {
-//         if (current->book == &(borrowed_book->book)) {
-//             // The book is currently borrowed
-//             if (prev == NULL) {
-//                 borrowed_book->bookborrowed = current->next;
-//             } else {
-//                 prev->next = current->next;
-//             }
-//             // Free the borrowedbooks node and return the book
-//             free(current);
-//             borrowed_book->book.quantity++;
-//             printf("Book returned successfully.\n");
-//             return;
-//         }
-//         prev = current;
-//         current = current->next;
-//     }
-
-//     // The book is not currently borrowed
-//     printf("Book not currently borrowed.\n");
-// }
-
-// void return_book(node *borrowed_book)
-// {
-//     if (borrowed_book == NULL)
-//     {
-//         printf("Book not found.\n");
-//         return;
-//     }
-
-//     borrowedbooks *current = borrowed_book->bookborrowed;
-//     borrowedbooks *prev = NULL;
-
-//     while (current != NULL) {
-//         if (current->book == &(borrowed_book->book)) {
-//             if (prev == NULL) {
-//                 borrowed_book->bookborrowed = current->next;
-//             } else {
-//                 prev->next = current->next;
-//             }
-//             free(current);
-//             printf("Book returned successfully.\n");
-//             return;
-//         }
-//         prev = current;
-//         current = current->next;
-//     }
-
-//     printf("Book not currently borrowed.\n");
-// }
-
-// void return_book(node *borrowed_book)
-// {
-//     if (borrowed_book == NULL)
-//     {
-//         printf("Book not found.\n");
-//         return;
-//     }
-
-//     borrowedbooks *current = first;
-//     borrowedbooks *prev = NULL;
-
-//     while (current != NULL) {
-//         if (current->book == &(borrowed_book->book)) {
-//             if (prev == NULL) {
-//                 first = current->next;
-//             } else {
-//                 prev->next = current->next;
-//             }
-//             free(current);
-//             printf("Book returned successfully.\n");
-//             return;
-//         }
-//         prev = current;
-//         current = current->next;
-//     }
-
-//     printf("Book not found in borrowed books list\n");
-// }
-
-// void return_book()
-// {
-//     borrowedbooks *borrowed_book = borrow_book();
-
-//     if (borrowed_book == NULL)
-//     {
-//         printf("Book not found.\n");
-//         return;
-//     }
-
-//     Node *current_node = first;
-//     Node *prev_node = NULL;
-
-//     while (current_node != NULL) {
-//         if (current_node->borrowed_book == borrowed_book) {
-//             if (prev_node == NULL) {
-//                 first = current_node->next;
-//             } else {
-//                 prev_node->next = current_node->next;
-//             }
-//             free(current_node);
-//             printf("Book returned successfully.\n");
-//             return;
-//         }
-//         prev_node = current_node;
-//         current_node = current_node->next;
-//     }
-
-//     printf("Book not found in borrowed books list.\n");
-// }
-// void return_book()
-// {
-
-//     node *borrowed_book= borrow_book();
-
-//     if(borrowed_book== NULL)
-//     {
-//          printf("033[0;31m\033[5m1.404. book not found\033[0m\n");
-//         return;
-//     }
-
-//     Node *returned_book= borrowed_book;
-//     Node *temp= returned_book  -> next;
-//     temp -> prev = returned_book -> prev;
-//     free(returned_book);
-// }
-
 
 time_t current_time()
 {
@@ -928,57 +614,3 @@ void list_borrowed_books(borrowedbooks *firstB)
         printf("\033[1;34mNo borrowed books\033[0m\n");
     }
 }
-
-// void list_borrowed_books (borrowedbooks *firstB)
-// {
-//     if (firstB != NULL)
-//     {
-//         if(first->next != NULL)
-//         {
-//             list_borrowed_books(firstB->next);
-//             printf("Name of book: %s ", firstB->book->name);
-//             printf("Name of borrower: %s", firstB->borrower->fname);
-//         }
-//         else
-//         printf("Name of book: %s", firstB->book->name);
-//         printf("Name of borrower: %s", firstB->borrower->fname);
-//     }
-//     else
-//     printf("No borrowed books\n");
-// }
-
-
-
-/* search for book notes
- int len = strlen(name);
-    if (len > 0 && name[len-1] == '\n')
-    {
-        name[len-1] = '\0';
-    }
-    len = strlen(department);
-    if (len > 0 && department[len-1] == '\n')
-    {1
-        department[len-1] = '\0';
-    }
-*/
-
-/* comments for main function in case shit gets wild
-        if (choice==1)
-            add_book();
-        if (choice==7)
-        {
-            printf("Enter the name of the book\n");
-                fgets(name, sizeof(name), stdin);
-                name[strlen(name)-1]=0;
-                printf("Enter the name of the department\n");
-                fgets(dep,sizeof(dep), stdin);
-                name[strlen(dep)-1]=0;
-                node* p= search_for_book(name, dep);
-                if (p==NULL)
-                {
-                    printf("Book not found\n");
-                }
-                else
-                printf("Book found\n");
-        }
-*/
