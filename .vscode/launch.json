@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/pc/Documents/GitHub/Book-Nook",
-      "program": "c:/Users/pc/Documents/GitHub/Book-Nook/build/Debug/outDebug",
+      "cwd": "c:/Users/nadam/OneDrive/Documents/GitHub/Book-Nook",
+      "program": "c:/Users/nadam/OneDrive/Documents/GitHub/Book-Nook/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
